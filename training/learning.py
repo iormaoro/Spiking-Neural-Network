@@ -5,7 +5,7 @@
 
 #####################################################################################################################################
 
-
+# pip install -r requirements.txt
 import numpy as np
 from neuron import neuron
 import random
@@ -22,6 +22,7 @@ from rl import update
 from reconstruct import reconst_weights
 from parameters import param as par
 from var_th import threshold
+from spike_tbformat import print_spikes
 import os
 
 from PIL import Image
@@ -199,6 +200,11 @@ for i in range(par.n):
     plt.plot(ttt, Pth, 'r')
     plt.plot(ttt, pot_arrays[i])
     plt.show()
+
+
+# print spiketrain
+
+print_spikes(train)
 
 # Reconstructing weights to analyse training
 for i in range(par.n):
