@@ -2,7 +2,13 @@
 
 # This is the main file which calls all the functions and trains the network by updating weights
 
+# In this new branch timing and neuron behaviour concepts will be modified.
+# Previous simulator used T as timing simulation and also to determine the step size of that timing simulation.
+# For each Unit of time everything was checked, but neuron behaviour was very simple as the leakage of the potential
+# was a cosntant.
 
+# A new timing concept will be introduced. Each T unit will consist a certain DeltaT in the differential equation,
+# The sum of all those Delta T will mean the total time simulation.
 #####################################################################################################################################
 
 # pip install -r requirements.txt
@@ -119,6 +125,7 @@ for k in range(par.epoch):
                     # print train[:, t]
                     # print synapse[j]
                     if (x.P > par.Prest):
+                        # x.P = x.P*
                         x.P -= var_D        # Aqui iria la ecuacion diferencial.
                     active_pot[j] = x.P
 
