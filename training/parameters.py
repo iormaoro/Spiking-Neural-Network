@@ -5,8 +5,12 @@
 #################################################################################################################
 
 class param:
+
+
     scale = 1
-    T = 400
+    T = 400     # T*update_time = simulation time
+    time_const = 10     # 10ms
+    update_time = 0.1   # 0.1ms
     t_back = -20
     t_fore = 20
 
