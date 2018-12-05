@@ -125,8 +125,8 @@ for k in range(par.epoch):
                     # print train[:, t]
                     # print synapse[j]
                     if (x.P > par.Prest):
-                        # x.P = x.P*
-                        x.P -= var_D        # Aqui iria la ecuacion diferencial.
+                        x.P -= x.P*(par.update_time/par.time_const)
+                        # x.P -= var_D        # Aqui iria la ecuacion diferencial.
                     active_pot[j] = x.P
 
                 pot_arrays[j].append(x.P)
