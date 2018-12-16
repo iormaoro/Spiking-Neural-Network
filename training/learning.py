@@ -118,7 +118,7 @@ for k in range(par.epoch):
         for t in time:
             for j, x in enumerate(layer2):
                 active = []
-                if (x.t_rest < t):
+                if (x.t_rest < t): # t_rest = -1 initially later updated, resting time after spiking
                     x.P = x.P + np.dot(synapse[j], train[:, t])
                     # print "diferencia"
                     # print x.P - (x.P - np.dot(synapse[j], train[:, t]))
@@ -133,21 +133,21 @@ for k in range(par.epoch):
 
             # Lateral Inhibition
             if (f_spike == 0):
-                high_pot = max(active_pot)
-                if (high_pot > var_threshold):
-                    f_spike = 1
+                high_pot = max(active_pot)  # check for the maximum potential of neurons
+                if (high_pot > var_threshold):  # if higher than threshold
+                    f_spike = 1     # spike
                     winner = np.argmax(active_pot)
                     img_win = winner
-                    print "winner is " + str(winner)
+                    print "winner is " + str(winner)    # which neuron gave the spike
                     for s in range(par.n):
                         if (s != winner):
-                            layer2[s].P = par.Pmin
+                            layer2[s].P = par.Pmin      # rest of neurons, potential to minimum
 
             # Check for spikes and update weights
             for j, x in enumerate(layer2):
                 s = x.check()
-                if (s == 1):
-                    x.t_rest = t + x.t_ref
+                if (s == 1):    # if there is a spike
+                    x.t_rest = t + x.t_ref  # resting time?
                     x.P = par.Prest
                     for h in range(par.m):
                         for t1 in range(-2, par.t_back - 1, -1):
