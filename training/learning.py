@@ -93,6 +93,7 @@ for k in range(par.epoch):
         # calculating threshold value for the image
         var_threshold = threshold(train)
 
+        print "Threshold is:" + str(var_threshold)
         # print var_threshold
         # synapse_act = np.zeros((par.n,par.m))
         # var_threshold = 9
@@ -120,6 +121,7 @@ for k in range(par.epoch):
                 active = []
                 if (x.t_rest < t): # t_rest = -1 initially later updated, resting time after spiking
                     x.P = x.P + np.dot(synapse[j], train[:, t])
+                    # print x.P
                     # print "diferencia"
                     # print x.P - (x.P - np.dot(synapse[j], train[:, t]))
                     # print train[:, t]
@@ -135,10 +137,12 @@ for k in range(par.epoch):
             if (f_spike == 0):
                 high_pot = max(active_pot)  # check for the maximum potential of neurons
                 if (high_pot > var_threshold):  # if higher than threshold
-                    f_spike = 1     # spike
+                    f_spike = 1     # spike is been given for this input
+                    print(x.P)
+                    print "SPIIIIIIIIIIIIKE"
                     winner = np.argmax(active_pot)
                     img_win = winner
-                    print "winner is " + str(winner)    # which neuron gave the spike
+                    print "winner is " + str(winner)    # which neuron gave the first spike
                     for s in range(par.n):
                         if (s != winner):
                             layer2[s].P = par.Pmin      # rest of neurons, potential to minimum
