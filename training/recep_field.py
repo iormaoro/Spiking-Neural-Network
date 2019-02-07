@@ -9,7 +9,7 @@
 import numpy as np
 import cv2
 from parameters import param as par
-
+import time
 
 def rf(inp):
     # print inp
@@ -40,6 +40,8 @@ def rf(inp):
 
     # Por cada pixel, mirar a el mismo y a los de alrededor y segun los valores darle una intensidad u otra al pixel.
     # Convolution
+    start_time = time.time()
+
     for i in range(par.pixel_x):
         for j in range(par.pixel_x):
             summ = 0
@@ -54,6 +56,9 @@ def rf(inp):
 
             # print summ
             pot[i][j] = summ
+
+    end_time = time.time()-start_time
+    print "Time for receptive field: " + str(end_time)
 
     # print pot
     # w = 1
