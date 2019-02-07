@@ -130,7 +130,7 @@ for k in range(par.epoch):
                         x.P -= x.P*(par.update_time/par.time_const)
                         # x.P -= var_D        # Aqui iria la ecuacion diferencial.
                     active_pot[j] = x.P
-
+                print x.P
                 pot_arrays[j].append(x.P)
 
             # Lateral Inhibition
