@@ -53,7 +53,8 @@ def encode(pot):
 
             # calculating firing rate proportional to the membrane potential
             # interpolating
-            freq = interp(pot[l][m], [-1.069, 2.781], [1, 20])
+            freq = interp(pot[l][m], [0, 2.781], [1, 6])
+
 
             # print freq
             if freq <= 0:

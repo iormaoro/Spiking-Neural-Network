@@ -43,6 +43,9 @@ time = np.arange(1, par.T + 1, 1)
 
 layer2 = []
 
+update_time = par.update_time
+time_const = par.time_const
+
 # creating the hidden layer of neurons
 for i in range(par.n):
     a = neuron()
@@ -51,19 +54,23 @@ for i in range(par.n):
 # synapse matrix	initialization
 synapse = np.zeros((par.n, par.m))
 
+
+
 for i in range(par.n):
     for j in range(par.m):
         synapse[i][j] = random.uniform(0, 0.4 * par.scale)
 
+resultados = []
+
 for k in range(par.epoch):
     # for i in range (1, 7):
     # for i in range(322, 323):
-    for i in range (0,2):
+    for i in range (0,6):
 
         print i, "  ", k
         # img = cv2.imread(mnist1/" + str(i) + ".png", 0)
         # img = np.array(Image.open("../classification/training_images/" + str(i) + ".png"))
-        img = np.array(Image.open("../images/LR" + str(i) + ".png"))
+        img = np.array(Image.open("../images/training_images/" + str(i) + ".png"))
         # img = np.array(Image.open("../images/10" + str(i) + ".png"))
         # print img
         # img = img[0]
@@ -89,6 +96,19 @@ for k in range(par.epoch):
 
         # Generating spike train
         train = np.array(encode(pot))
+
+        coincidences=np.zeros(par.T+1)
+        howmanycoin=0
+
+        for l in range(par.T+1):
+            for x in range(par.pixel_x * par.pixel_x):
+                coincidences[l]=coincidences[l]+train[x][l]
+            if (coincidences[l]>1):
+                print coincidences[l]
+                howmanycoin=howmanycoin+1
+
+        print("There have been", howmanycoin, "coincidences out of", par.T, "time frames.")
+        # print coincidences
 
         # calculating threshold value for the image
         var_threshold = threshold(train)
@@ -127,10 +147,10 @@ for k in range(par.epoch):
                     # print train[:, t]
                     # print synapse[j]
                     if (x.P > par.Prest):
-                        x.P -= x.P*(par.update_time/par.time_const)
+                        x.P -= x.P*(update_time/time_const)
                         # x.P -= var_D        # Aqui iria la ecuacion diferencial.
                     active_pot[j] = x.P
-                print x.P
+                # print x.P
                 pot_arrays[j].append(x.P)
 
             # Lateral Inhibition
@@ -173,6 +193,9 @@ for k in range(par.epoch):
                     if (synapse[img_win][p] < par.w_min):
                         synapse[img_win][p] = par.w_min
 
+        # we store what neuron has spiked for each input image
+#        resultados[i].append(np.argmax(active_pot))
+
 ttt = np.arange(0, len(pot_arrays[0]), 1)
 Pth = []
 for i in range(len(ttt)):
@@ -180,17 +203,17 @@ for i in range(len(ttt)):
 
 # Check if different pixels have spikes in same time
 
-coincidences = np.zeros(par.T+1)
-howmanycoin = 0
+# coincidences = np.zeros(par.T+1)
+# howmanycoin = 0
+#
+# for l in range(par.T+1):
+#     for x in range(par.pixel_x * par.pixel_x):
+#         coincidences[l] = coincidences[l] + train[x][l]
+#     if(coincidences[l]>1):
+#         howmanycoin=howmanycoin+1
 
-for l in range(par.T+1):
-    for x in range(par.pixel_x * 2):
-        coincidences[l] = coincidences[l] + train[x][l]
-    if(coincidences[l]>1):
-        howmanycoin=howmanycoin+1
-
-print("There have been", howmanycoin, "coincidences out of", par.T, "time frames.")
-print coincidences
+# print("There have been", howmanycoin, "coincidences out of", par.T, "time frames.")
+# print coincidences
 
 np.savetxt('spiketrain.txt', train, fmt = '%d')
 # file_object  = open("SpikeTrain.txt", "w")
@@ -202,7 +225,7 @@ np.savetxt('weights.txt', synapse)
 # file.close()
 # matlab --> rot90....dec2q
 
-
+np.save('weights_numpy.npy', synapse)
 
 # plotting
 for i in range(par.n):
@@ -215,7 +238,7 @@ for i in range(par.n):
 
 # print spiketrain
 
-print_spikes(train)
+# print_spikes(train)
 
 # Reconstructing weights to analyse training
 for i in range(par.n):

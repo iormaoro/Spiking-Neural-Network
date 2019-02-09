@@ -15,32 +15,32 @@ def rf(inp):
     # print inp
     #inp = inp[0]
     sca1 = 0.625
-    sca2 = 0.125
-    sca3 = -0.125
+    sca2 = 0.25
+    sca3 = -0.25
     sca4 = -.5
 
     # Receptive field kernel
-    # w = [[sca4, sca3, sca2, sca3, sca4],
-    #      [sca3, sca2, sca1, sca2, sca3],
-    #      [sca2, sca1, 1, sca1, sca2],
-    #      [sca3, sca2, sca1, sca2, sca3],
-    #      [sca4, sca3, sca2, sca3, sca4]]
+    w = [[sca4, sca3, sca2, sca3, sca4],
+         [sca3, sca2, sca1, sca2, sca3],
+         [sca2, sca1, 1, sca1, sca2],
+         [sca3, sca2, sca1, sca2, sca3],
+         [sca4, sca3, sca2, sca3, sca4]]
 
-    w = [[-0.4, 0.5, -0.4],
-         [0.5, 1, 0.5],
-         [-0.4, 0.5, -0.4]]
+    # w = [[-0.4, 0.5, -0.4],
+    #      [0.5, 1, 0.5],
+    #      [-0.4, 0.5, -0.4]]
 
 
     pot = np.zeros([par.pixel_x, par.pixel_x])
-    # ran = [-2, -1, 0, 1, 2]
-    ran = [-1, 0, 1]
-    ox = 1
-    oy = 1
+    ran = [-2, -1, 0, 1, 2]
+    # ran = [-1, 0, 1]
+    ox = 2
+    oy = 2
 
 
     # Por cada pixel, mirar a el mismo y a los de alrededor y segun los valores darle una intensidad u otra al pixel.
     # Convolution
-    start_time = time.time()
+    # start_time = time.time()
 
     for i in range(par.pixel_x):
         for j in range(par.pixel_x):
@@ -57,8 +57,8 @@ def rf(inp):
             # print summ
             pot[i][j] = summ
 
-    end_time = time.time()-start_time
-    print "Time for receptive field: " + str(end_time)
+    # end_time = time.time()-start_time
+    # print "Time for receptive field: " + str(end_time)
 
     # print pot
     # w = 1
