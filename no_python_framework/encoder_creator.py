@@ -1,21 +1,88 @@
 #from parameters import param as par
 #pixel_x = par.pixel_x
 
-pixel_x = 8
+pixel_x = 28
+
+# 0 rom
 
 print("if ( reset = '1' ) then")
-print("     ram_address <= ( others => 'Z' );")
-print("     ena <= '0';")
+print("     ram_address_0 <= ( others => 'Z' );")
+print("     ena_0 <= '0';")
 print("elsif ( clk'event and clk = '1' ) then")
 print("     if ( prevneurons_spike(" +str(pixel_x*pixel_x-1)+ ")= '1' ) then")
-print("         ram_address <= std_logic_vector(to_unsigned(" + str(0) +",10));")
-print("         ena <= '1';")
-for i in range(pixel_x*pixel_x - 1):
+print("         ram_address_0 <= std_logic_vector(to_unsigned(" + str(0) +",10));")
+print("         ena_0 <= '1';")
+x=1
+for i in xrange(3,pixel_x*pixel_x - 1,4):
     print("     elsif ( prevneurons_spike(" +  str((pixel_x*pixel_x-1)-i-1) + ") = '1') then")
-    print("         ram_Address <= std_logic_vector(to_unsigned(" + str(i+1) + ",10));")
-    print("         ena <= '1';")
+    print("         ram_Address_0 <= std_logic_vector(to_unsigned(" + str(i+1) + ",10));")
+    print("         ena_0 <= '1';")
+    x=x+1
 print("     else")
-print("         ram_Address <= (others => 'Z');")
-print("         ena <= '0';")
+print("         ram_Address_0 <= (others => 'Z');")
+print("         ena_0 <= '0';")
+print("     end if;")
+print("end if;")
+
+# 1 rom
+
+print("if ( reset = '1' ) then")
+print("     ram_address_1 <= ( others => 'Z' );")
+print("     ena_1 <= '0';")
+print("elsif ( clk'event and clk = '1' ) then")
+print("     if ( prevneurons_spike(" +str(pixel_x*pixel_x-1-1)+ ")= '1' ) then")
+print("         ram_address_1 <= std_logic_vector(to_unsigned(" + str(0) +",10));")
+print("         ena_1 <= '1';")
+x=1
+for i in xrange(4,pixel_x*pixel_x - 1,4):
+    print("     elsif ( prevneurons_spike(" +  str((pixel_x*pixel_x-1)-i-1) + ") = '1') then")
+    print("         ram_Address_1 <= std_logic_vector(to_unsigned(" + str(x) + ",10));")
+    print("         ena_1 <= '1';")
+    x=x+1
+print("     else")
+print("         ram_Address_1 <= (others => 'Z');")
+print("         ena_1 <= '0';")
+print("     end if;")
+print("end if;")
+
+# 2 rom
+
+print("if ( reset = '1' ) then")
+print("     ram_address_2 <= ( others => 'Z' );")
+print("     ena_2 <= '0';")
+print("elsif ( clk'event and clk = '1' ) then")
+print("     if ( prevneurons_spike(" +str(pixel_x*pixel_x-1-1-1)+ ")= '1' ) then")
+print("         ram_address_2 <= std_logic_vector(to_unsigned(" + str(0) +",10));")
+print("         ena_2 <= '1';")
+x=1
+for i in xrange(5,pixel_x*pixel_x - 1,4):
+    print("     elsif ( prevneurons_spike(" +  str((pixel_x*pixel_x-1)-i-1) + ") = '1') then")
+    print("         ram_Address_2 <= std_logic_vector(to_unsigned(" + str(x) + ",10));")
+    print("         ena_2 <= '1';")
+    x=x+1
+print("     else")
+print("         ram_Address_2 <= (others => 'Z');")
+print("         ena_2 <= '0';")
+print("     end if;")
+print("end if;")
+
+# 3 rom
+
+print("if ( reset = '1' ) then")
+print("     ram_address_3 <= ( others => 'Z' );")
+print("     ena_3 <= '0';")
+print("elsif ( clk'event and clk = '1' ) then")
+print("     if ( prevneurons_spike(" +str(pixel_x*pixel_x-1-1-1-1)+ ")= '1' ) then")
+print("         ram_address_3 <= std_logic_vector(to_unsigned(" + str(0) +",10));")
+print("         ena_3 <= '1';")
+x=1
+for i in xrange(6,pixel_x*pixel_x - 1,4):
+    print("     elsif ( prevneurons_spike(" +  str((pixel_x*pixel_x-1)-i-1) + ") = '1') then")
+    print("         ram_Address_3 <= std_logic_vector(to_unsigned(" + str(x) + ",10));")
+    print("         ena_3 <= '1';")
+    x=x+1
+print("     else")
+print("         ram_Address_3 <= (others => 'Z');")
+print("         ena_3 <= '0';")
 print("     end if;")
 print("end if;")
