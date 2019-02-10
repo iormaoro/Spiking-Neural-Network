@@ -97,17 +97,17 @@ for k in range(par.epoch):
         # Generating spike train
         train = np.array(encode(pot))
 
-        coincidences=np.zeros(par.T+1)
-        howmanycoin=0
-
-        for l in range(par.T+1):
-            for x in range(par.pixel_x * par.pixel_x):
-                coincidences[l]=coincidences[l]+train[x][l]
-            if (coincidences[l]>1):
-                print coincidences[l]
-                howmanycoin=howmanycoin+1
-
-        print("There have been", howmanycoin, "coincidences out of", par.T, "time frames.")
+        # coincidences=np.zeros(par.T+1)
+        # howmanycoin=0
+        #
+        # for l in range(par.T+1):
+        #     for x in range(par.pixel_x * par.pixel_x):
+        #         coincidences[l]=coincidences[l]+train[x][l]
+        #     if (coincidences[l]>1):
+        #         print coincidences[l]
+        #         howmanycoin=howmanycoin+1
+        #
+        # print("There have been", howmanycoin, "coincidences out of", par.T, "time frames.")
         # print coincidences
 
         # calculating threshold value for the image
