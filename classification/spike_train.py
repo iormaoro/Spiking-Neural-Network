@@ -12,7 +12,7 @@ from numpy import interp
 from neuron import neuron
 import random
 from recep_field import rf
-import imageio
+# import imageio
 import math
 from sklearn.preprocessing import normalize
 
@@ -32,7 +32,7 @@ def encode_stochastic(img):
 
 def encode_deterministic(pot):
     # defining time frame of 1s with steps of 5ms
-    T=200;
+    T=400;
     # initializing spike train
     train=[]
 
@@ -40,7 +40,7 @@ def encode_deterministic(pot):
         for m in range(28):
             temp=np.zeros([(T+1),])
             # calculating firing rate proportional to the membrane potential
-            freq=interp(pot[l][m],[-2,5],[1,20])
+            freq=interp(pot[l][m],[0,2.781],[1,6])
             # print freq
             if freq>0:
                 freq1=math.ceil(T / freq)

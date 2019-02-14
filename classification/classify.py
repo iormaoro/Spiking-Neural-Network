@@ -7,23 +7,29 @@ import numpy as np
 from neuron import neuron
 import random
 from recep_field import rf
-import imageio
-from spike_train import *
-from weight_initialization import learned_weights
 
+from PIL import Image
+
+from spike_train import *
+# from weight_initialization import learned_weights
+import numpy as np
 # Parameters
 global time,T,dt,t_back,t_fore,w_min
-T=200
+T=400
 time=np.arange(1,T+1,1)
 t_back=-20
 t_fore=20
-Pth=150  # Should be Pth = 6 for deterministic spike train
+Pth=2  # Should be Pth = 6 for deterministic spike train
 m=784  # Number of neurons in first layer
-n=8  # Number of neurons in second layer
+n=3  # Number of neurons in second layer
 epoch=1
 num_of_images=6
 w_max=0.5
 w_min=-0.5
+
+# T = 400
+time_const = 10
+update_time = 0.1
 
 layer2=[]
 # creating the hidden layer of neurons
@@ -33,22 +39,26 @@ for i in range(n):
 
 # synapse matrix
 synapse=np.zeros((n,m))
-# learned weights
-weight_matrix=learned_weights()
-for i in range(num_of_images):
-    synapse[i]=weight_matrix[i]
 
-# random initialization for rest of the synapses
-for i in range(num_of_images,n):
-    for j in range(m):
-        synapse[i][j]=random.uniform(w_min,w_max)
+synapse=np.load('weights_numpy.npy')
+# print synapse[1]
+
+# learned weights
+# weight_matrix=learned_weights()
+# for i in range(num_of_images):
+#     synapse[i]=weight_matrix[i]
+#
+# # random initialization for rest of the synapses
+# for i in range(num_of_images,n):
+#     for j in range(m):
+#         synapse[i][j]=random.uniform(w_min,w_max)
 
 for k in range(epoch):
     for i in range(1,7):
         spike_count=np.zeros((n,1))
 
         # read the image to be classified
-        img=imageio.imread("training_images/"+str(i)+".png")
+        img=np.array(Image.open("0_3.png"))
 
         # initialize the potentials of output neurons
         for x in layer2:
@@ -59,7 +69,7 @@ for k in range(epoch):
 
         # generate spike trains. Select between deterministic and stochastic
         # train = np.array(encode_deterministic(pot))
-        train=np.array(encode_stochastic(img))
+        train=np.array(encode_deterministic(img))
 
         # flag for lateral inhibition
         f_spike=0
@@ -72,7 +82,7 @@ for k in range(epoch):
                 if (x.t_rest<t):
                     x.P=x.P+np.dot(synapse[j],train[:,t])
                     if (x.P>x.Prest):
-                        x.P-=x.D
+                        x.P-=x.P*(update_time/time_const)
                     active_pot[j]=x.P
 
             # Lateral Inhibition
@@ -81,6 +91,7 @@ for k in range(epoch):
                 if (high_pot>Pth):
                     f_spike=1
                     winner=np.argmax(active_pot)
+                    print "winner is" + str(winner)
                     for s in range(n):
                         if (s!=winner):
                             layer2[s].P=layer2[s].Pmin
