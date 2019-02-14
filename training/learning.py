@@ -62,139 +62,163 @@ for i in range(par.n):
 
 resultados = []
 
+recent_neuron = 0
+recent_counter = 0
+
 for k in range(par.epoch):
     # for i in range (1, 7):
     # for i in range(322, 323):
-    for i in range (0,6):
+    for l in range(0,3):
+        for i in range(0,20):
+        # for l in range(0,3):
 
-        print i, "  ", k
-        # img = cv2.imread(mnist1/" + str(i) + ".png", 0)
-        # img = np.array(Image.open("../classification/training_images/" + str(i) + ".png"))
-        img = np.array(Image.open("../images/training_images/" + str(i) + ".png"))
-        # img = np.array(Image.open("../images/10" + str(i) + ".png"))
-        # print img
-        # img = img[0]
-        # print img
+            print i,"_",l, "  ", k
+            # img = cv2.imread(mnist1/" + str(i) + ".png", 0)
+            # img = np.array(Image.open("../classification/training_images/" + str(i) + ".png"))
+            img = np.array(Image.open("../images/forpython/" + str(l)+ "_"+ str(i) + ".png"))
+            # img = np.array(Image.open("../images/10" + str(i) + ".png"))
+            # print img
+            # img = img[0]
+            # print img
 
-        # img_numb = np.zeros((par.pixel_x, par.pixel_x))
+            # img_numb = np.zeros((par.pixel_x, par.pixel_x))
 
-        # RGB to GrayScale convert Prueba1.png - type Grayscale Prueba0_Gray_1.png
-        # print img
-        # for x in range(0,par.pixel_x) :
-        #     for y in range(0,par.pixel_x) :
-        #         if (img[x][y] == True) :
-        #             img_numb[x][y] = 255
-        #         else :
-        #             img_numb[x][y] = 0
+            # RGB to GrayScale convert Prueba1.png - type Grayscale Prueba0_Gray_1.png
+            # print img
+            # for x in range(0,par.pixel_x) :
+            #     for y in range(0,par.pixel_x) :
+            #         if (img[x][y] == True) :
+            #             img_numb[x][y] = 255
+            #         else :
+            #             img_numb[x][y] = 0
 
-        # print img_numb
+            # print img_numb
 
 
-        # Convolving image with receptive field
-        # Kernel (image processing)
-        pot = rf(img)
+            # Convolving image with receptive field
+            # Kernel (image processing)
+            pot = rf(img)
 
-        # Generating spike train
-        train = np.array(encode(pot))
+            # Generating spike train
+            train = np.array(encode(pot))
 
-        # coincidences=np.zeros(par.T+1)
-        # howmanycoin=0
-        #
-        # for l in range(par.T+1):
-        #     for x in range(par.pixel_x * par.pixel_x):
-        #         coincidences[l]=coincidences[l]+train[x][l]
-        #     if (coincidences[l]>1):
-        #         print coincidences[l]
-        #         howmanycoin=howmanycoin+1
-        #
-        # print("There have been", howmanycoin, "coincidences out of", par.T, "time frames.")
-        # print coincidences
+            # coincidences=np.zeros(par.T+1)
+            # howmanycoin=0
 
-        # calculating threshold value for the image
-        var_threshold = threshold(train)
+            # for r in range(par.T+1):
+            #     for x in range(par.pixel_x * par.pixel_x):
+            #         coincidences[r]=coincidences[r]+train[x][r]
+            #     if (coincidences[r]>1):
+            #         print coincidences[r]
+            #         howmanycoin=howmanycoin+1
 
-        print "Threshold is:" + str(var_threshold)
-        # print var_threshold
-        # synapse_act = np.zeros((par.n,par.m))
-        # var_threshold = 9
-        # print var_threshold
-        # var_D = (var_threshold*3)*0.07
+            # print("There have been", howmanycoin, "coincidences out of", par.T, "time frames.")
+            # print coincidences
 
-        var_D = 0.15 * par.scale
+            # calculating threshold value for the image
+            var_threshold = threshold(train)
 
-        # initialize threshold for hidden neurons
-        for x in layer2:
-            x.initial(var_threshold)
+            # print "Threshold is:" + str(var_threshold)
+            # print var_threshold
+            # synapse_act = np.zeros((par.n,par.m))
+            # var_threshold = 9
+            # print var_threshold
+            # var_D = (var_threshold*3)*0.07
 
-        # flag for lateral inhibition
-        f_spike = 0
+            var_D = 0.15 * par.scale
 
-        img_win = 100
+            # initialize threshold for hidden neurons
+            for x in layer2:
+                x.initial(var_threshold)
 
-        active_pot = []
-        for index1 in range(par.n):
-            active_pot.append(0)
+            # flag for lateral inhibition
+            f_spike = 0
 
-        # Leaky integrate and fire neuron dynamics
-        for t in time:
-            for j, x in enumerate(layer2):
-                active = []
-                if (x.t_rest < t): # t_rest = -1 initially later updated, resting time after spiking
-                    x.P = x.P + np.dot(synapse[j], train[:, t])
+            img_win = 100
+
+            active_pot = []
+            for index1 in range(par.n):
+                active_pot.append(0)
+
+            # Leaky integrate and fire neuron dynamics
+            for t in time:
+                for j, x in enumerate(layer2):
+                    active = []
+                    if (x.t_rest < t): # t_rest = -1 initially later updated, resting time after spiking
+                        x.P = x.P + np.dot(synapse[j], train[:, t])
+                        # print x.P
+                        # print "diferencia"
+                        # print x.P - (x.P - np.dot(synapse[j], train[:, t]))
+                        # print train[:, t]
+                        # print synapse[j]
+                        if (x.P > par.Prest):
+                            x.P -= x.P*(update_time/time_const)
+                            # x.P -= var_D        # Aqui iria la ecuacion diferencial.
+                        active_pot[j] = x.P
                     # print x.P
-                    # print "diferencia"
-                    # print x.P - (x.P - np.dot(synapse[j], train[:, t]))
-                    # print train[:, t]
-                    # print synapse[j]
-                    if (x.P > par.Prest):
-                        x.P -= x.P*(update_time/time_const)
-                        # x.P -= var_D        # Aqui iria la ecuacion diferencial.
-                    active_pot[j] = x.P
-                # print x.P
-                pot_arrays[j].append(x.P)
+                    pot_arrays[j].append(x.P)
 
-            # Lateral Inhibition
-            if (f_spike == 0):
-                high_pot = max(active_pot)  # check for the maximum potential of neurons
-                if (high_pot > var_threshold):  # if higher than threshold
-                    f_spike = 1     # spike is been given for this input
-                    print(x.P)
-                    print "SPIIIIIIIIIIIIKE"
-                    winner = np.argmax(active_pot)
-                    img_win = winner
-                    print "winner is " + str(winner)    # which neuron gave the first spike
-                    for s in range(par.n):
-                        if (s != winner):
-                            layer2[s].P = par.Pmin      # rest of neurons, potential to minimum
+                # Lateral Inhibition
+                if (f_spike == 0):
+                    high_pot = max(active_pot)  # check for the maximum potential of neurons
+                    if (high_pot > var_threshold):  # if higher than threshold
+                        f_spike = 1     # spike is been given for this input
+                        # print(x.P)
+                        print "SPIIIIIIIIIIIIKE"
+                        winner = np.argmax(active_pot)
+                        img_win = winner
+                        print "winner is " + str(winner)    # which neuron gave the first spike
+                        for s in range(par.n):
+                            if (s != winner):
+                                layer2[s].P = par.Pmin      # rest of neurons, potential to minimum
 
-            # Check for spikes and update weights
-            for j, x in enumerate(layer2):
-                s = x.check()
-                if (s == 1):    # if there is a spike
-                    x.t_rest = t + x.t_ref  # resting time?
-                    x.P = par.Prest
-                    for h in range(par.m):
-                        for t1 in range(-2, par.t_back - 1, -1):
-                            if 0 <= t + t1 < par.T + 1:
-                                if train[h][t + t1] == 1:
-                                    # print "weight change by" + str(update(synapse[j][h], rl(t1)))
-                                    synapse[j][h] = update(synapse[j][h], rl(t1))
+                # Check for spikes and update weights
+                for j, x in enumerate(layer2):
+                    s = x.check()
+                    if (s == 1):    # if there is a spike
 
-                        for t1 in range(2, par.t_fore + 1, 1):
-                            if 0 <= t + t1 < par.T + 1:
-                                if train[h][t + t1] == 1:
-                                    # print "weight change by" + str(update(synapse[j][h], rl(t1)))
-                                    synapse[j][h] = update(synapse[j][h], rl(t1))
-                                    #print synapse[j][h]
-        if (img_win != 100):
-            for p in range(par.m):
-                if sum(train[p]) == 0:
-                    synapse[img_win][p] -= 0.06 * par.scale
-                    if (synapse[img_win][p] < par.w_min):
-                        synapse[img_win][p] = par.w_min
+                        # if(recent_counter==0):
+                        #     recent_neuron = j
+                        # if(recent_counter==2):
+                        #     recent_counter=0
+                        # else:
+                        #     recent_counter=recent_counter+1
 
-        # we store what neuron has spiked for each input image
-#        resultados[i].append(np.argmax(active_pot))
+                        x.t_rest = t + x.t_ref  # resting time?
+                        x.P = par.Prest
+                        for h in range(par.m):
+                            for t1 in range(-2, par.t_back - 1, -1):
+                                if 0 <= t + t1 < par.T + 1:
+                                    if train[h][t + t1] == 1:
+                                        # print "weight change by" + str(update(synapse[j][h], rl(t1)))
+                                        synapse[l][h] = update(synapse[l][h], rl(t1))
+
+                            for t1 in range(2, par.t_fore + 1, 1):
+                                if 0 <= t + t1 < par.T + 1:
+                                    if train[h][t + t1] == 1:
+                                        # print "weight change by" + str(update(synapse[j][h], rl(t1)))
+                                        synapse[l][h] = update(synapse[l][h], rl(t1))
+                                        #print synapse[j][h]
+
+                        # negative reinforcement if the spike given was not in the neuron it should have been.
+
+                        # if( j != l):
+                        #     for h in range(par.m):
+                        #         for t1 in range(-2, par.t_back - 1, -1):
+                        #             if 0 <= t + t1 < par.T + 1:
+                        #                 if train[j][t + t1] == 1:
+                        #                     # print "weight change by" + str(update(synapse[j][h], rl(t1)))
+                        #                     synapse[j][h] = update(synapse[j][h], rl(-t1))
+
+            if (img_win != 100):
+                for p in range(par.m):
+                    if sum(train[p]) == 0:
+                        synapse[img_win][p] -= 0.06 * par.scale
+                        if (synapse[img_win][p] < par.w_min):
+                            synapse[img_win][p] = par.w_min
+
+            # we store what neuron has spiked for each input image
+    #        resultados[i].append(np.argmax(active_pot))
 
 ttt = np.arange(0, len(pot_arrays[0]), 1)
 Pth = []
