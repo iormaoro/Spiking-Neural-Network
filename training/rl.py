@@ -21,8 +21,10 @@ def rl(t):
 # STDP weight update rule
 def update(w, del_w):
     if del_w < 0:
+        # print par.sigma * del_w * (w - abs(par.w_min)) * par.scale
         return w + par.sigma * del_w * (w - abs(par.w_min)) * par.scale
     elif del_w > 0:
+        # print par.sigma * del_w * (par.w_max - w) * par.scale
         return w + par.sigma * del_w * (par.w_max - w) * par.scale
 
 
