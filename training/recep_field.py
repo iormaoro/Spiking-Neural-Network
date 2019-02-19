@@ -42,6 +42,9 @@ def rf(inp):
     # Convolution
     # start_time = time.time()
 
+    z=0
+
+    summ_of_summs = 0
     for i in range(par.pixel_x):
         for j in range(par.pixel_x):
             summ = 0
@@ -50,12 +53,38 @@ def rf(inp):
                     #print w[ox + m][oy + n]
                     #print "inp"
                     #print inp[i + m][j + n]
+
+
                     if (i + m) >= 0 and (i + m) <= par.pixel_x - 1 and (j + n) >= 0 and (j + n) <= par.pixel_x - 1:
-                        summ = summ + w[ox + m][oy + n] * inp[i + m][j + n] / 255
-                        #print summ
+                        # if(z>12):
+                            summ = summ + w[ox + m][oy + n] * inp[i + m][j + n] / 255
+                        # else:
+                        #     summ=summ+w[ox+m][oy+n] * inp[i+m][j+n] / 255
+            # print summ
+            summ_of_summs = summ_of_summs + summ
+
+            # With this z we will control that if there is an image with many white, it won't outpeform the
+            # rest because of it's intensity, it will somehow normalize it for every image.
+            # print summ
+            # if(summ>1.1):
+            #     z = z+1
+                # print z
+                #print summ
 
             # print summ
             pot[i][j] = summ
+    print summ_of_summs
+    # low intensity images up, and high intensity ones down
+    new_total = 0 # reset it to know the new one.
+    for i in range(par.pixel_x):
+        for j in range(par.pixel_x):
+            # print pot[i][j]
+            pot[i][j] = pot[i][j] + (pot[i][j] * (((50.0 - summ_of_summs)/(summ_of_summs*2))))
+            # print pot[i][j]
+            new_total += pot[i][j]
+    print "new " + str(new_total)
+
+            # print sum(pot[:][:])
 
     # end_time = time.time()-start_time
     # print "Time for receptive field: " + str(end_time)
