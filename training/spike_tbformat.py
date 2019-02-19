@@ -8,6 +8,6 @@ def print_spikes(train):
             if(i==0):
                 print ('@(posedge Clk) SpikeTrain = 784\'b' + str(int(train[i,t]))),
             elif(i!= (par.pixel_x*par.pixel_x -1)):
-                print ('borrar'+str(int(train[i,t]))),
+                print ('a'+str(int(train[i,t]))),
             else:
-                print 'borrar' + str(int(train[i,t]))+";"
+                print 'a' + str(int(train[i,t]))+";"

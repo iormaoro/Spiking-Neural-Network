@@ -6,7 +6,7 @@ from recep_field import rf
 
 
 # img = np.array(Image.open("../images/LR" + str(0) + ".png"))
-img = np.array(Image.open("../images/training_images/" + str(0) + ".png"))
+img = np.array(Image.open("../images/" + str(0) + "_test.png"))
 pot = rf(img)
 train = np.array(encode(pot))
 print_spikes(train)
