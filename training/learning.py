@@ -65,12 +65,15 @@ resultados = []
 recent_neuron = 0
 recent_counter = 0
 
+acertado = 0
+pruebas = 0
+
 for k in range(par.epoch):
     # for i in range (1, 7):
     # for i in range(322, 323):
-    for l in range(0,3):
-        for i in range(0,20):
-        # for l in range(0,3):
+    # for l in range(0,4):
+    for i in range(0,20):
+        for l in range(0,4):
 
             print i,"_",l, "  ", k
             # img = cv2.imread(mnist1/" + str(i) + ".png", 0)
@@ -104,14 +107,14 @@ for k in range(par.epoch):
 
             # coincidences=np.zeros(par.T+1)
             # howmanycoin=0
-
+            #
             # for r in range(par.T+1):
             #     for x in range(par.pixel_x * par.pixel_x):
             #         coincidences[r]=coincidences[r]+train[x][r]
             #     if (coincidences[r]>1):
-            #         print coincidences[r]
+            #         # print coincidences[r]
             #         howmanycoin=howmanycoin+1
-
+            #
             # print("There have been", howmanycoin, "coincidences out of", par.T, "time frames.")
             # print coincidences
 
@@ -164,12 +167,12 @@ for k in range(par.epoch):
                     if (high_pot > var_threshold):  # if higher than threshold
                         f_spike = 1     # spike is been given for this input
                         # print(x.P)
-                        print "SPIIIIIIIIIIIIKE"
+                        print "SPIKE"
                         winner = np.argmax(active_pot)
                         img_win = winner
-                        print "winner is " + str(winner)    # which neuron gave the first spike
+                        print "winner is " + str(winner) + "->" + str(l)   # which neuron gave the first spike
                         for s in range(par.n):
-                            if (s != winner):
+                            if (s != l): # (s != winner):
                                 layer2[s].P = par.Pmin      # rest of neurons, potential to minimum
 
                 # Check for spikes and update weights
@@ -185,7 +188,12 @@ for k in range(par.epoch):
                         #     recent_counter=recent_counter+1
 
                         x.t_rest = t + x.t_ref  # resting time?
-                        x.P = par.Prest
+
+                        if(s == l):
+                            x.P = par.Prest
+                        else:
+                            x.P = par.Pmin
+
                         for h in range(par.m):
                             for t1 in range(-2, par.t_back - 1, -1):
                                 if 0 <= t + t1 < par.T + 1:
@@ -193,22 +201,24 @@ for k in range(par.epoch):
                                         # print "weight change by" + str(update(synapse[j][h], rl(t1)))
                                         synapse[l][h] = update(synapse[l][h], rl(t1))
 
-                            for t1 in range(2, par.t_fore + 1, 1):
-                                if 0 <= t + t1 < par.T + 1:
-                                    if train[h][t + t1] == 1:
-                                        # print "weight change by" + str(update(synapse[j][h], rl(t1)))
-                                        synapse[l][h] = update(synapse[l][h], rl(t1))
-                                        #print synapse[j][h]
+                            # for t1 in range(2, par.t_fore + 1, 1):
+                            #     if 0 <= t + t1 < par.T + 1:
+                            #         if train[h][t + t1] == 1:
+                            #             # print "weight change by" + str(update(synapse[j][h], rl(t1)))
+                            #             synapse[l][h] = update(synapse[l][h], rl(t1))
+                            #             #print synapse[j][h]
 
                         # negative reinforcement if the spike given was not in the neuron it should have been.
 
-                        # if( j != l):
-                        #     for h in range(par.m):
-                        #         for t1 in range(-2, par.t_back - 1, -1):
-                        #             if 0 <= t + t1 < par.T + 1:
-                        #                 if train[j][t + t1] == 1:
-                        #                     # print "weight change by" + str(update(synapse[j][h], rl(t1)))
-                        #                     synapse[j][h] = update(synapse[j][h], rl(-t1))
+                        if( j != l):
+                            for h in range(par.m):
+                                for t1 in range(-2, par.t_back - 1, -1):
+                                    if 0 <= t + t1 < par.T + 1:
+                                        if train[j][t + t1] == 1:
+                                            # print "weight change by" + str(update(synapse[j][h], rl(t1)))
+                                            synapse[j][h] = update(synapse[j][h], rl(-t1))
+
+
 
             if (img_win != 100):
                 for p in range(par.m):
@@ -220,10 +230,18 @@ for k in range(par.epoch):
             # we store what neuron has spiked for each input image
     #        resultados[i].append(np.argmax(active_pot))
 
+            # calculate performance of last epoch
+            if(k==par.epoch-1):
+                if(img_win == l):
+                    acertado += 1
+                pruebas+=1
+
 ttt = np.arange(0, len(pot_arrays[0]), 1)
 Pth = []
 for i in range(len(ttt)):
     Pth.append(layer2[0].Pth)
+
+print str(acertado) + "out of" + str(pruebas) + ", =" + str(100*acertado/pruebas) + "%"
 
 # Check if different pixels have spikes in same time
 
@@ -252,12 +270,12 @@ np.savetxt('weights.txt', synapse)
 np.save('weights_numpy.npy', synapse)
 
 # plotting
-for i in range(par.n):
-    axes = plt.gca()
-    axes.set_ylim([-20, 50])
-    plt.plot(ttt, Pth, 'r')
-    plt.plot(ttt, pot_arrays[i])
-    plt.show()
+# for i in range(par.n):
+#     axes = plt.gca()
+#     axes.set_ylim([-20, 50])
+#     plt.plot(ttt, Pth, 'r')
+#     plt.plot(ttt, pot_arrays[i])
+#     plt.show()
 
 
 # print spiketrain
