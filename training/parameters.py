@@ -19,20 +19,22 @@ class param:
 
     # en si n = 3
 
-    n = 3  # Number of neurons in second layer
-    Pmin = -500 * scale # I believe it's to potentiate the training, in inference shouldn't be this.
+    n = 4  # Number of neurons in second layer
+    Pmin = -1 * scale # I believe it's to potentiate the training, in inference shouldn't be this.
     # Pth = 5
     # D = 0.7
-    w_max = 3 * scale
-    w_min = -0.1 * scale
+    w_max = 2 * scale
+    w_min = -0.15 * scale
     sigma = 0.01  # 0.02
-    A_plus = 0.1  # time difference is positive i.e negative reinforcement
-    A_minus = 9.6  # 0.01 # time difference is negative i.e positive reinforcement
-    tau_plus = 3.8 # en si 8 Algo que ver con que nuestra simulacion es mas corta y mas precisa? Afecta en rl
-    tau_minus = 3 # ens i 3
+    # Aumentando As aumentamos el cambio en el aprendizaje
+    A_plus = 8.1  # time difference is positive i.e negative reinforcement
+    A_minus = 16.8  # 0.01 # time difference is negative i.e positive reinforcement
+    # Aumentando taus reducimos el cambio en el aprendizaje
+    tau_plus = 8.3 # en si 8 Algo que ver con que nuestra simulacion es mas corta y mas precisa? Afecta en rl
+    tau_minus = 5.2 # ens i 3
 
     # izetez 12
-    epoch = 5
+    epoch = 3
 
     fr_bits = 12
     int_bits = 12
