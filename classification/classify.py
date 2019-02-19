@@ -19,9 +19,9 @@ T=400
 time=np.arange(1,T+1,1)
 t_back=-20
 t_fore=20
-Pth=2  # Should be Pth = 6 for deterministic spike train
+Pth=6  # Should be Pth = 6 for deterministic spike train
 m=784  # Number of neurons in first layer
-n=3  # Number of neurons in second layer
+n=4  # Number of neurons in second layer
 epoch=1
 num_of_images=6
 w_max=0.5
@@ -53,12 +53,15 @@ synapse=np.load('weights_numpy.npy')
 #     for j in range(m):
 #         synapse[i][j]=random.uniform(w_min,w_max)
 
-for k in range(epoch):
-    for i in range(1,7):
+pruebas = 0
+acertado = 0
+for k in range(0,4):
+    for i in range(0,8):
         spike_count=np.zeros((n,1))
 
         # read the image to be classified
-        img=np.array(Image.open("0_3.png"))
+        img=np.array(Image.open("testing_images/"+str(k)+"_"+str(i)+".png"))
+        print str(k)+"_"+str(i)+".png"
 
         # initialize the potentials of output neurons
         for x in layer2:
@@ -102,4 +105,12 @@ for k in range(epoch):
                 if (s==1):
                     spike_count[j]+=1
                     x.t_rest=t+x.t_ref
-        print spike_count
+
+        #print spike_count
+
+        if (winner==k):
+            acertado+=1
+        pruebas+=1
+
+print str(acertado) + "out of" + str(pruebas) + ", =" + str(100*acertado/pruebas) + "%"
+
