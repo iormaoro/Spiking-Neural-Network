@@ -30,7 +30,7 @@ def rf(inp):
                 for n in ran:
                     if (i+m)>=0 and (i+m)<=28-1 and (j+n)>=0 and (j+n)<=28-1:
                         # if(z>12):
-                        summ=summ+w[ox+m][oy+n] * inp[i+m][j+n] / 255
+                        summ= summ + w[ox+m][oy+n] * inp[i+m][j+n] / 255
                     # else:
                     #     summ=summ+w[ox+m][oy+n] * inp[i+m][j+n] / 255
                     # print summ
@@ -41,12 +41,16 @@ def rf(inp):
             # print summ
             # if (summ>1.1):
             #     z=z+1
+            # print summ
+            # print summ
             pot[i][j]=summ
-
-    for i in range(28):
-        for j in range(28):
-            # print pot[i][j]
-            pot[i][j] = pot[i][j] + (pot[i][j] * (((50.0 - summ_of_summs)/(summ_of_summs*2))))
+    # print summ_of_summs
+    #
+    # low intensity images up, and high intensity ones down
+    # new_total = 0 # reset it to know the new one.
+    # for i in range(28):
+    #     for j in range(28):
+    #         pot[i][j] = pot[i][j] + (pot[i][j] * (((50.0 - summ_of_summs)/(summ_of_summs*2))))
 
     return pot
 
