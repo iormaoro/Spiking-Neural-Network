@@ -27,6 +27,7 @@ def threshold(train):
         if simul_active > thresh:
             thresh = simul_active
 
+    print (thresh / 3) * par.scale
     return (thresh / 3) * par.scale
 
 
