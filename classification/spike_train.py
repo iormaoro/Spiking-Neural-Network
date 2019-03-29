@@ -32,7 +32,7 @@ def encode_stochastic(img):
 
 def encode_deterministic(pot):
     # defining time frame of 1s with steps of 5ms
-    T=400;
+    T=400
     # initializing spike train
     train=[]
 
@@ -40,7 +40,9 @@ def encode_deterministic(pot):
         for m in range(28):
             temp=np.zeros([(T+1),])
             # calculating firing rate proportional to the membrane potential
-            freq=interp(pot[l][m],[0,2.781],[1,6])
+            freq=interp(pot[l][m],[0,2.781],[1,6], right=0.1)
+            # print freq
+            # print pot[l][m]
             # print freq
             if freq>0:
                 freq1=math.ceil(T / freq)
