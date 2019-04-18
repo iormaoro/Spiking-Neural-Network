@@ -20,11 +20,11 @@ class param:
     # en si n = 3
 
     n = 3  # Number of neurons in second layer
-    Pmin = -500 * scale # I believe it's to potentiate the training, in inference shouldn't be this.
+    Pmin = -1 * scale # I believe it's to potentiate the training, in inference shouldn't be this.
     # Pth = 51
     # D = 0.7
-    w_max = 1.5 * scale
-    w_min = -0.15 * scale
+    w_max = 1 * scale #1.2
+    w_min = -0.02 * scale #-0.15
     sigma = 0.01  # 0.02
     # Aumentando As reducimos el cambio en el aprendizaje *exp(-!!)
     A_plus = 8.5  # time difference is positive i.e negative reinforcement
@@ -34,7 +34,7 @@ class param:
     tau_minus = 4.3 # 7.8
 
     # izetez 12
-    epoch = 3
+    epoch = 1
 
     fr_bits = 12
     int_bits = 12
