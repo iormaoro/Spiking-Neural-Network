@@ -8,15 +8,18 @@ from neuron import neuron
 import random
 from recep_field import rf
 
+
+import time
+
 from PIL import Image
 
 from spike_train import *
 # from weight_initialization import learned_weights
 import numpy as np
 # Parameters
-global time,T,dt,t_back,t_fore,w_min
+global timeeeeeee,T,dt,t_back,t_fore,w_min
 T=400
-time=np.arange(1,T+1,1)
+time_steps=np.arange(1,T+1,1)
 t_back=-20
 t_fore=20
 Pth=2  # Should be Pth = 6 for deterministic spike train
@@ -55,13 +58,14 @@ synapse=np.load('weights_numpy.npy')
 
 pruebas = 0
 acertado = 0
+millis = int(round(time.time() * 1000))
 for k in range(0,3):
-    for i in range(0,8):
+    for i in range(0,70):
         winner=10
         spike_count=np.zeros((n,1))
 
         # read the image to be classified
-        img=np.array(Image.open("0/"+str(k)+"_"+str(i)+".png"))
+        img=np.array(Image.open("../images/0/"+str(k)+"_"+str(i)+".png"))
         print str(k)+"_"+str(i)+".png"
 
         # initialize the potentials of output neurons
@@ -75,10 +79,24 @@ for k in range(0,3):
         # train = np.array(encode_deterministic(pot))
         train=np.array(encode_deterministic(pot))
 
+        # coincidences=np.zeros(400+1)
+        # howmanycoin=0
+        #
+        # for r in range(400+1):
+        #     for x in range(28 * 28):
+        #         coincidences[r]=coincidences[r]+train[x][r]
+        #     if (coincidences[r]>1):
+        #         # print coincidences[r]
+        #         howmanycoin=howmanycoin+1
+        #
+        # print("There have been", howmanycoin, "coincidences out of", 400, "time frames.")
+        # print coincidences
+
+
         # flag for lateral inhibition
         f_spike=0
         active_pot=np.zeros((n,1))
-        for t in time:
+        for t in time_steps:
             for j,x in enumerate(layer2):
                 active=[]
 
@@ -88,13 +106,15 @@ for k in range(0,3):
                     if (x.P>x.Prest):
                         x.P-=x.P*(update_time/time_const)
                     active_pot[j]=x.P
+                # if(j==0):
+                #     print "potential = " + str(active_pot[j])
 
             # Lateral Inhibition
             if (f_spike==0):
                 high_pot=max(active_pot)
                 # print high_pot
                 if (high_pot>Pth):
-                    print t
+                    # print t
                     f_spike=1
                     winner=np.argmax(active_pot)
                     print "winner is" + str(winner)
@@ -114,6 +134,8 @@ for k in range(0,3):
         if (winner==k):
             acertado+=1
         pruebas+=1
+millis2 = int(round(time.time() * 1000))
 
+print str((millis2 - millis)) + "milliseconds"
 print str(acertado) + "out of" + str(pruebas) + ", =" + str(100*acertado/pruebas) + "%"
 
