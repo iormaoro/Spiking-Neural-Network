@@ -60,6 +60,9 @@ for i in range(par.n):
     for j in range(par.m):
         synapse[i][j] = random.uniform(0, 0.4 * par.scale)
 
+# if we want to continue from last spikes:
+# synapse=np.load('weights_numpy.npy')
+
 resultados = []
 
 recent_neuron = 0
@@ -72,7 +75,7 @@ for k in range(par.epoch):
     # for i in range (1, 7):
     # for i in range(322, 323):
     # for l in range(0,4):
-    for i in range(0,700):
+    for i in range(0,40):
         for l in range(0,3):
 
             print i,"_",l, "  ", k
@@ -191,34 +194,55 @@ for k in range(par.epoch):
 
                         x.t_rest = t + x.t_ref  # resting time?
 
-                        if(s == l):
-                            x.P = par.Prest
-                        else:
-                            x.P = par.Pmin
+                        # if(s == l):
+                        x.P = par.Prest
+                        # else:
+                        #     x.P = par.Pmin
 
-                        for h in range(par.m):
-                            for t1 in range(-2, par.t_back*2 - 1, -1): # poniendo *2 aumentamos los weights de los spikes anteriores, esto nos lleva a a que el spike se de antes?(simul time)
-                                if 0 <= t + t1 < par.T + 1:
-                                    if train[h][t + t1] == 1:
-                                        # print "weight change by" + str(update(synapse[j][h], rl(t1)))
-                                        synapse[l][h] = update(synapse[l][h], rl(t1/1.5)) # in rl, t1 enters as exp (-t1/ss), so being smaller means more update
+                        if(t!=399):
+                            for h in range(par.m):
+                                for t1 in range(-2, par.t_back*2 - 1, -1): # poniendo *2 aumentamos los weights de los spikes anteriores, esto nos lleva a a que el spike se de antes?(simul time)
+                                    if 0 <= t + t1 < par.T + 1:
+                                        if train[h][t + t1] == 1:
+                                            # print "weight change by" + str(update(synapse[j][h], rl(t1)))
+                                            synapse[l][h] = update(synapse[l][h], rl(t1/1.5)) # in rl, t1 enters as exp (-t1/ss), so being smaller means more update
 
-                            for t1 in range(2, par.t_fore + 1, 1):
-                                if 0 <= t + t1 < par.T + 1:
-                                    if train[h][t + t1] == 1:
-                                        # print "weight change by" + str(update(synapse[j][h], rl(t1)))
-                                        synapse[l][h] = update(synapse[l][h], rl(-t1/1.5))
-                                        #print synapse[j][h]
+                                for t1 in range(2, par.t_fore + 1, 1):
+                                    if 0 <= t + t1 < par.T + 1:
+                                        if train[h][t + t1] == 1:
+                                            # print "weight change by" + str(update(synapse[j][h], rl(t1)))
+                                            synapse[l][h] = update(synapse[l][h], rl(-t1/1.5))
+                                            #print synapse[j][h]
+                        else:   # porque si no son solo los ultimos, queremos fuerza en los primeros
+                            for h in range(par.m):
+                                for t1 in range(-2,par.t_back * 2-1,
+                                                -1):  # poniendo *2 aumentamos los weights de los spikes anteriores, esto nos lleva a a que el spike se de antes?(simul time)
+                                    if 0<=85+t1<par.T+1:
+                                        if train[h][85+t1]==1:
+                                            # print "weight change by" + str(update(synapse[j][h], rl(t1)))
+                                            synapse[l][h]=update(synapse[l][h],rl(
+                                                t1 / 1.5))  # in rl, t1 enters as exp (-t1/ss), so being smaller means more update
+
+                                for t1 in range(2,par.t_fore+1,1):
+                                    if 0<=85+t1<par.T+1:
+                                        if train[h][85+t1]==1:
+                                            # print "weight change by" + str(update(synapse[j][h], rl(t1)))
+                                            synapse[l][h]=update(synapse[l][h],rl(-t1 / 1.5))
+                                            # print synapse[j][h]
+
+
+
 
                         # negative reinforcement if the spike given was not in the neuron it should have been.
 
                         if( j != l and (t!=399)): # if t is 399 almost for sure is going to be because there was no spike.
+                            print "borrando"
                             for h in range(par.m):
                                 for t1 in range(-2, par.t_back - 1, -1):
                                     if 0 <= t + t1 < par.T + 1:
                                         if train[j][t + t1] == 1:
                                             # print "weight change by" + str(update(synapse[j][h], rl(t1)))
-                                            synapse[j][h] = update(synapse[j][h], rl(-t1))
+                                            synapse[j][h] = update(synapse[j][h], rl(-t1*3))
 
 
 
