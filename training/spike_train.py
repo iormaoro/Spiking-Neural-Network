@@ -53,7 +53,7 @@ def encode(pot):
 
             # calculating firing rate proportional to the membrane potential
             # interpolating
-            freq = interp(pot[l][m], [0, 2.781], [1, 6], right=0.1) # right means if it is upper than 2.781, take right value 0.1 = nospike
+            freq = interp(pot[l][m], [0, 4], [1, 6], right=0.1) # right means if it is upper than 2.781, take right value 0.1 = nospike
 
 
             # print freq
