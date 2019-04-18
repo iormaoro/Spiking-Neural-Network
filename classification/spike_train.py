@@ -38,20 +38,28 @@ def encode_deterministic(pot):
 
     for l in range(28):
         for m in range(28):
+            # if(pot[l][m]>1):
+            #     print pot[l][m]
             temp=np.zeros([(T+1),])
             # calculating firing rate proportional to the membrane potential
-            freq=interp(pot[l][m],[0,2.781],[1,6], right=0.1)
+            freq=interp(pot[l][m],[0,4],[1,6], right=0.1)
             # print freq
             # print pot[l][m]
             # print freq
             if freq>0:
                 freq1=math.ceil(T / freq)
+                # print freq/T
                 # generating spikes according to the firing rate
                 k=freq1
+                # if (pot[l][m]>1):
+                #     print freq
+                #     print k
                 while k<(T+1):
                     temp[int(k)]=1
                     k=k+freq1
             train.append(temp)
+            # if(pot[l][m]>1):
+            #     print temp
         # print sum(temp)
     return train
 
